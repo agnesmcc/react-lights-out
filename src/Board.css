@@ -1,3 +1,7 @@
 .Board {
   margin: 0 auto;
 }
+
+.Board-Title {
+  text-align: center;
+}
