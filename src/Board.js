@@ -34,6 +34,13 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
   function createBoard() {
     let initialBoard = [];
     // TODO: create array-of-arrays of true/false values
+    for (let y = 0; y < nrows; y++) {
+      let row = [];
+      for (let x = 0; x < ncols; x++) {
+        lightOn = Math.random() < chanceLightStartsOn;
+        lightOn ? row.push(true) : row.push(false);
+      }
+    }
     return initialBoard;
   }
 
