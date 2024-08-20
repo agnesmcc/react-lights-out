@@ -28,9 +28,9 @@ import "./Board.css";
  **/
 
 function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.5 }) {
-  const [board, setBoard] = useState(() => {
-    return createBoard(nrows, ncols, chanceLightStartsOn);
-  });
+  const [board, setBoard] = useState(
+    createBoard(nrows, ncols, chanceLightStartsOn)
+  );
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
   function createBoard() {
@@ -44,12 +44,23 @@ function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.5 }) {
       }
       initialBoard.push(row);
     }
-    console.log(initialBoard);
+    // console.log(initialBoard);
     return initialBoard;
   }
 
   function hasWon() {
     // TODO: check the board in state to determine whether the player has won.
+    console.log(board);
+    for (let row of board) {
+      for (let cell of row) {
+        if (cell === true) { 
+          // if any cell is true, the game has not been won
+          return false;
+        }
+      }
+    }
+    // if all cells are false, the game has been won
+    return true;
   }
 
   function flipCellsAround(coord) {
@@ -88,25 +99,27 @@ function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.5 }) {
 
   // if the game is won, just show a winning msg & render nothing else
 
-  // TODO
-
-  // make table board
-  return (
-    <>
-    <h1>Lights out!</h1>
-    <table className="Board">
-      <tbody>
-        {board.map((row, y)  => (
-          <tr>
-            {row.map((cell, x) => (
-              <Cell isLit={cell} flipCellsAroundMe={() => flipCellsAround(`${y}-${x}`)} />
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    </>
-  )
+  if (hasWon()) {
+    return <h1>You won!</h1>
+  } else {
+    // make table board
+    return (
+      <>
+      <h1>Lights out!</h1>
+      <table className="Board">
+        <tbody>
+          {board.map((row, y)  => (
+            <tr key={y}>
+              {row.map((cell, x) => (
+                <Cell key={`${y}-${x}`} isLit={cell} flipCellsAroundMe={() => flipCellsAround(`${y}-${x}`)} />
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      </>
+    )
+  }
 }
 
 export default Board;
