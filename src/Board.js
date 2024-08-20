@@ -53,7 +53,7 @@ function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.5 }) {
   }
 
   function flipCellsAround(coord) {
-    setBoard(oldBoard => {
+    setBoard(() => {
       const [y, x] = coord.split("-").map(Number);
 
       const flipCell = (y, x, boardCopy) => {
@@ -66,9 +66,23 @@ function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.5 }) {
 
       // TODO: Make a (deep) copy of the oldBoard
 
+      const boardCopy = board.map((row) => [...row]);
+
       // TODO: in the copy, flip this cell and the cells around it
 
+      flipCell(y, x, boardCopy);
+      flipCell(y, x - 1, boardCopy);
+      flipCell(y, x + 1, boardCopy);
+      flipCell(y + 1, x, boardCopy);
+      flipCell(y - 1, x, boardCopy);
+      flipCell(y + 1, x + 1, boardCopy);
+      flipCell(y - 1, x - 1, boardCopy);
+      flipCell(y + 1, x - 1, boardCopy);
+      flipCell(y - 1, x + 1, boardCopy);
+
       // TODO: return the copy
+
+      return boardCopy;
     });
   }
 
@@ -78,22 +92,20 @@ function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.5 }) {
 
   // make table board
   return (
+    <>
+    <h1>Lights out!</h1>
     <table className="Board">
-      <thead>
-        <tr>
-          <th>Lights out!</th>
-        </tr>
-      </thead>
       <tbody>
-        {board.map((row) => (
+        {board.map((row, y)  => (
           <tr>
-            {row.map((cell) => (
-              <Cell isLit={cell}/>
+            {row.map((cell, x) => (
+              <Cell isLit={cell} flipCellsAroundMe={() => flipCellsAround(`${y}-${x}`)} />
             ))}
           </tr>
         ))}
       </tbody>
     </table>
+    </>
   )
 }
 
